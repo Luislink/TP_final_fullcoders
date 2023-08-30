@@ -1,12 +1,22 @@
+//******************************************************************
+//***** Autor: Luis Antonio Juarez								 ****
+//***** Comisión: 11/21654										 ****
+//***** Profesor: Aldo Ferrari									 ****
+//***** Descripción: El siguiente codigo corresponde al proyecto ****
+//***** de trabajo final del Curso introductorio al pensamiento  ****
+//***** computacional.					 						 ****
+//*****	 El proyecto trata de un gestor de turnos para clientes  **** 
+//*****  de un servicio tecnico de aires acondicionados.		 ****
+//*******************************************************************
+
 //El siguiente SubAlgoritmo es la base de datos del administrador
-SubAlgoritmo admi_turnos(dias,turno)
+SubAlgoritmo admi_turnos(dias,turno) //[Nombre,DNI,Direccion,Asunto]
 	Escribir "Turnos de la semana:"
 	Para i=0 Hasta 5 hacer
 		Escribir "------------------------------------------"
 		Escribir dias[i,0],":",turno[i,0]," - ", "DNI:",turno[i,1]
-		Escribir "Teléfono: ",turno[i,2]
-		Escribir "Dirección: ",turno[i,3]
-		Escribir "Asunto: ", turno[i,4]
+		Escribir "Dirección: "
+		Escribir "Asunto: ", turno[i,2]
 		Escribir "------------------------------------------"
 	Fin Para
 	Repetir
@@ -15,25 +25,10 @@ SubAlgoritmo admi_turnos(dias,turno)
 		Escribir " |2) Borrar turnos|"
 		Escribir "+--------+", " +----------------+"
 		Leer x1
-		//A continuacion se borran los datos del arreglo turno[] y ademas se establecen como disponibles en arreglo dias[]
 		Si x1=2 Entonces
 			Escribir "¿Está seguro que desea borrar la base de datos? (2: Sí / 0: No)"
 			Leer x
 			Si x==2 Entonces
-				Para i=0 Hasta 5 Hacer
-					dias[i,1]="Disponible"
-				Fin Para
-				//Aqui se recorre todo el arreglo turno para borrar su contenido
-				Para i=0 Hasta 5 Hacer
-					
-					Para j=0 Hasta 4 Hacer
-						
-						turno[i,j]=""
-						
-					Fin Para
-					
-				Fin Para
-				
 				Escribir "Base de datos borrada con éxito"
 			SiNo
 				Escribir ""
@@ -42,7 +37,7 @@ SubAlgoritmo admi_turnos(dias,turno)
 	Hasta Que x1=1
 FinSubAlgoritmo
 
-SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion]
+SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion],[Nombre,DNI,Direccion,Asunto]
 	Repetir
 	Escribir "-------------------------------------------"
 	Escribir "--- Se disponen de los siguientes días:  --"
@@ -56,48 +51,22 @@ SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion]
 		Escribir "| ** 8) Salir "
 		Escribir "+---------------------------+"
 		Leer x
-		Si 0<=x y x<=5 Entonces
+		Si x=0 Entonces
 			d=x
 			Repetir
 				Escribir "Seleccionó ",dias[d,0]," ¿está seguro? (1: Sí / 2: No)"
 				Leer x
 				Si x=1 Entonces
+					dias[d,0]="Reservado"
+					Escribir "Ingrese el nombre completo"
+					Leer dato 
+					dato = turno[0,0,0,0]
+					//[Nombre,DNI,Direccion,Asunto]
+					Escribir "Ingrese DNI"
+					Leer dato 
 					
-					Si dias[d,1]="Disponible" Entonces
-						
-						//[Nombre,DNI,Telefono,Direccion,Asunto]
-						Escribir "Ingrese DNI"
-						Leer dato 
-						turno[d,1] = dato
-						//A futuro se hara una validación de datos para no otorgar turnos repetidos al mismo DNI
-						Escribir "Ingrese el nombre completo"
-						Leer dato 
-						turno[d,0] = dato
-						
-						Escribir "Número de telefono Celular/WhatsApp"
-						Leer dato 
-						turno[d,2] = dato
-						
-						Escribir "Ingrese dirección para realizar el trabajo"
-						Leer dato
-						turno[d,3] = dato
-						
-						Escribir "Descripción: Tarea/Comentario"
-						Leer dato
-						turno[d,4]=dato
-						
-						dias[d,1]="Reservado"
-						
-						
-					SiNo
-						Escribir "***********************************************************"
-						Escribir "*** Lo sentimos, el dia ",dias[d,0]," ya se encuentra reservado ***"
-						Escribir "***********************************************************"
-					Fin Si
-					
-				
 				Fin Si
-				x=2
+				
 			Hasta Que x=2
 			
 			
@@ -105,7 +74,8 @@ SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion]
 	Hasta Que x=8
 	
 FinSubAlgoritmo
-SubAlgoritmo tareas_cotizacion(void)
+
+SubAlgoritmo tareas_cotizacion(void)	//Funcion de cotizacion
 	a=12000 	//Costo de la tarea 1)
 	b=6000		//Costo de la tarea 2)
 	c=8000		//Costo de la tarea 3)
@@ -191,6 +161,7 @@ SubAlgoritmo x <- menu(void) //Menu de opciones
 	Fin Si
 FinSubAlgoritmo
 
+//Main
 Algoritmo turnos_presupuesto
 	s=1
 		
@@ -205,13 +176,10 @@ Algoritmo turnos_presupuesto
 		dias[i,1]="Disponible"
 	FinPara
 	
-	Dimension turno(6,5) //[Nombre,DNI,Telefono,Direccion,Asunto]
-	//Turno de prueba precargado para observar
+	Dimension turno(6,4) //[Nombre,DNI,Direccion,Asunto]
 	turno[0,0]="Luis Antonio Juarez"
 	turno[0,1]="32018634"
-	turno[0,2]="3814864626"
-	turno[0,3]="Pje Las Rosas 500"
-	turno[0,4]="Instalación de aire de 3000 frig"
+	turno[0,2]="Instalación"
 	
 	Repetir
 		bienvenida(void)
