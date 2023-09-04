@@ -10,34 +10,83 @@
 //*******************************************************************
 
 //El siguiente SubAlgoritmo es la base de datos del administrador
-SubAlgoritmo admi_turnos(dias,turno) //[Nombre,DNI,Direccion,Asunto]
+SubAlgoritmo admin_turnos_costos(dias,turno,tareas,precio) //[Nombre,DNI,Telefono,Direccion,Asunto]
 	Escribir "Turnos de la semana:"
 	Para i=0 Hasta 5 hacer
 		Escribir "------------------------------------------"
 		Escribir dias[i,0],":",turno[i,0]," - ", "DNI:",turno[i,1]
-		Escribir "Dirección: "
-		Escribir "Asunto: ", turno[i,2]
+		Escribir "Teléfono: ",turno[i,2]
+		Escribir "Dirección: ",turno[i,3]
+		Escribir "Asunto: ", turno[i,4]
 		Escribir "------------------------------------------"
 	Fin Para
 	Repetir
-		Escribir "+--------+", " +----------------+"
+		Escribir "+--------+", " +----------------+", " +--------------------+"
 		Escribir Sin Saltar "1) Salir |"
-		Escribir " |2) Borrar turnos|"
-		Escribir "+--------+", " +----------------+"
+		Escribir Sin Saltar" |2) Borrar turnos|"
+		Escribir " |3) Actualizar costos|"
+		Escribir "+--------+", " +----------------+", " +--------------------+"
 		Leer x1
 		Si x1=2 Entonces
 			Escribir "¿Está seguro que desea borrar la base de datos? (2: Sí / 0: No)"
 			Leer x
-			Si x==2 Entonces
+			Si x=2 Entonces
+				Para i=0 Hasta 5 Hacer
+					dias[i,1]="Disponible"
+					Para j=0 Hasta 4 Hacer
+						turno[i,j]=""
+					FinPara
+				FinPara
 				Escribir "Base de datos borrada con éxito"
 			SiNo
 				Escribir ""
 			Fin Si
 		Fin Si
+		Si x1=3 Entonces
+			Repetir
+				Escribir " Desea actualizar costos de: "
+				Para i=0 Hasta 3 Hacer 
+					Escribir i," -" tareas[i]," - ", "Precio: $",precio[i]
+				FinPara
+				Escribir "Presione (8) para salir"
+				Leer x
+				
+				Segun x Hacer
+					0:
+						Escribir "Ingrese nuevo precio de: "
+						Escribir tareas[0]
+						Leer x
+						precio[0]=x
+						Escribir "****ACTUALIZACION CORRECTA****"
+					1:
+						Escribir "Ingrese nuevo precio de: "
+						Escribir tareas[1]
+						Leer x
+						precio[1]=x
+						Escribir "****ACTUALIZACION CORRECTA****"
+					2:
+						Escribir "Ingrese nuevo precio de: "
+						Escribir tareas[2]
+						Leer x
+						precio[2]=x
+						Escribir "****ACTUALIZACION CORRECTA****"
+					3:
+						Escribir "Ingrese nuevo precio de: "
+						Escribir tareas[3]
+						Leer x
+						precio[3]=x
+						Escribir "****ACTUALIZACION CORRECTA****"
+				Fin Segun
+				
+			Hasta Que x = 8
+			
+		Fin Si
+		
 	Hasta Que x1=1
 FinSubAlgoritmo
 
-SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion],[Nombre,DNI,Direccion,Asunto]
+SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion],[Nombre,DNI,Telefono, Direccion,Asunto]
+	Borrar Pantalla
 	Repetir
 	Escribir "-------------------------------------------"
 	Escribir "--- Se disponen de los siguientes días:  --"
@@ -51,22 +100,51 @@ SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion],[Nombre,DNI,Direc
 		Escribir "| ** 8) Salir "
 		Escribir "+---------------------------+"
 		Leer x
-		Si x=0 Entonces
+		Si x>=0 y x<=5 Entonces
 			d=x
 			Repetir
 				Escribir "Seleccionó ",dias[d,0]," ¿está seguro? (1: Sí / 2: No)"
 				Leer x
 				Si x=1 Entonces
-					dias[d,0]="Reservado"
-					Escribir "Ingrese el nombre completo"
-					Leer dato 
-					dato = turno[0,0,0,0]
-					//[Nombre,DNI,Direccion,Asunto]
-					Escribir "Ingrese DNI"
-					Leer dato 
 					
+					Si dias[d,1]="Reservado" Entonces
+						Escribir "******Lo sentimos*******"
+						Escribir "El turno del dia ",dias[d,0]," se encuentra Reservado"
+						Escribir "***Intente con otro dia disponible***"
+					SiNo
+						
+						//[Nombre,DNI,Telefono,Direccion,Asunto]
+						Escribir "Ingrese el nombre completo"
+						Leer dato 
+						turno[d,0] = dato  
+						
+						Escribir "Ingrese DNI"
+						Leer dato 
+						turno[d,1] = dato
+						
+						Escribir "Ingrese número de Telefono/Whatsapp"
+						Leer dato 
+						turno[d,2] = dato
+						
+						
+						Escribir "Ingrese dirección para ser visitado por el técnico"
+						Leer dato 
+						turno[d,3] = dato
+						
+						Escribir "Brevemente escriba el servicio que necesita"
+						Leer dato 
+						turno[d,4] = dato
+						
+						dias[d,1]="Reservado"
+						Escribir "Su turno fue reservado con éxito"
+						
+						
+					Fin Si
+					
+				SiNo
+					Escribir ""
 				Fin Si
-				
+				x=2
 			Hasta Que x=2
 			
 			
@@ -75,11 +153,11 @@ SubAlgoritmo mostrar_turnos(dias,turno) //dias[dias,condicion],[Nombre,DNI,Direc
 	
 FinSubAlgoritmo
 
-SubAlgoritmo tareas_cotizacion(void)	//Funcion de cotizacion
-	a=12000 	//Costo de la tarea 1)
-	b=6000		//Costo de la tarea 2)
-	c=8000		//Costo de la tarea 3)
-	d=4000		//Costo de la tarea 4)
+SubAlgoritmo tareas_cotizacion(precio)	//Funcion de cotizacion
+	//a=12000 	//Costo de la tarea 1)
+	//b=6000		//Costo de la tarea 2)
+	//c=8000		//Costo de la tarea 3)
+	//d=4000		//Costo de la tarea 4)
 	costo = 0
 	tildea=""
 	tildeb=""
@@ -88,10 +166,10 @@ SubAlgoritmo tareas_cotizacion(void)	//Funcion de cotizacion
 	band=Verdadero
 	Repetir
 		Escribir "Seleccione la/s tarea/s a realizar"
-		Escribir "1) Instalación basica hasta 4500 frig ",tildea
-		Escribir "2) Desinstalación hasta 6000 frig ",tildeb
-		Escribir "3) Limpieza y mantenimiento ",tildec
-		Escribir "4) Visita técnica con diagnostico/presupuesto ",tilded
+		Escribir "1) Instalación basica hasta 4500 frig ","- Precio: ","$",precio[0]," -->",tildea
+		Escribir "2) Desinstalación hasta 6000 frig ","- Precio: ","$",precio[1]," -->",tildeb
+		Escribir "3) Limpieza y mantenimiento ","- Precio: ","$",precio[2]," -->",tildec
+		Escribir "4) Visita técnica con diagnostico/presupuesto ","- Precio: ","$",precio[3]," -->",tilded
 		Escribir "5) Borrar selección"
 		Escribir "6) Salir"
 		Escribir ""
@@ -100,16 +178,16 @@ SubAlgoritmo tareas_cotizacion(void)	//Funcion de cotizacion
 		Leer x
 		Segun x Hacer
 			1:
-				costo=costo+a
+				costo=costo+precio[0]
 				tildea="((OK))"
 			2:
-				costo=costo+b
+				costo=costo+precio[1]
 				tildeb="((OK))"
 			3:
-				costo=costo+c
+				costo=costo+precio[2]
 				tildec="((OK))"
 			4:
-				costo=costo+d
+				costo=costo+precio[3]
 				tilded="((OK))"
 			5:
 				costo=0
@@ -153,7 +231,8 @@ SubAlgoritmo x <- menu(void) //Menu de opciones
 	Escribir "2) Tareas y cotización"
 	Escribir "3) Salir"
 	Escribir "----------------------------------------------------"
-	Escribir "Para administrar de turnos presione (5) e ingrese la contraseña"
+	Escribir "*Administrador presione (5) para actualizacion de precios/ver turnos"
+	Escribir " e ingrese la contraseña"
 	Leer x
 	Si x <>1 y x<>2 y x<>3 y x<>5 Entonces
 		Escribir "*******Su opción no es válida***********"
@@ -164,7 +243,18 @@ FinSubAlgoritmo
 //Main
 Algoritmo turnos_presupuesto
 	s=1
-		
+	Dimension tareas(4)	//[tarea,costo] 0:Instalacion basica - 1: Desinstalacion - 2: Limpieza y Mantenimiento - 3: Diagnostico/Presupuesto
+	tareas[0]=" Instalación basica hasta 4500 frig "
+	tareas[1]=" Desinstalación hasta 6000 frig "
+	tareas[2]=" Limpieza y mantenimiento "
+	tareas[3]=" Visita técnica con diagnostico/presupuesto "
+	
+	Dimension precio(4)
+	precio[0]=12000
+	precio[1]=6000
+	precio[2]=8000
+	precio[3]=4000
+	
 	Dimension dias(6,2) //Inicializamos Turnos y dias disponibles
 	dias[0,0]="Lunes"
 	dias[1,0]="Martes"
@@ -176,10 +266,13 @@ Algoritmo turnos_presupuesto
 		dias[i,1]="Disponible"
 	FinPara
 	
-	Dimension turno(6,4) //[Nombre,DNI,Direccion,Asunto]
+	Dimension turno(6,5) //[Nombre,DNI,Telefono,Direccion,Asunto] 
+	// Valores de ejemplo que posteriormente serán reemplazados
 	turno[0,0]="Luis Antonio Juarez"
 	turno[0,1]="32018634"
-	turno[0,2]="Instalación"
+	turno[0,2]="3814756932"
+	turno[0,3]="Pje Federico Helguera 610 - El Manantial"
+	turno[0,4]="Instalación"
 	
 	Repetir
 		bienvenida(void)
@@ -188,13 +281,13 @@ Algoritmo turnos_presupuesto
 			1:
 				mostrar_turnos(dias,turno) //Funcion mostrar
 			2:
-				tareas_cotizacion(void)		//Funcion cotizar
+				tareas_cotizacion(precio)		//Funcion cotizar
 				
 			5:
 				Escribir "Ingrese la contraseña"
 				Leer pass
 				Si pass=="12345" Entonces
-					admi_turnos(dias,turno)
+					admin_turnos_costos(dias,turno,tareas,precio)
 				SiNo
 					Escribir "***La contraseña es incorrecta intente de nuevo***"
 				Fin Si
